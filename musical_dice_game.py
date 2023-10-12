@@ -84,8 +84,8 @@ def trio_filename(tmid):
 def roll_dice(num): 
     sum  = 0
 
-    for i in range(0, num):
-        rando = random.randint(1,6)
+    for i in range(num):
+        rando = random.randint(1, 6)
         sum += rando
 
     return sum
@@ -127,8 +127,28 @@ def construct_waltz():
     # Same loop for selections from the trio_table
     #
     # That's it.
-    
-    return -1
+
+    play_list = []
+    for col in minuet_table:
+        play_list.append(minuet_filename(col[roll_dice(2)]))
+
+    for col in trio_table:
+        play_list.append(trio_filename(col[roll_dice(1)]))
+
+    audio_list = []
+    for fn in play_list:
+        audio_list.append(simpleaudio.WaveObject.from_wave_file(fn))
+
+    i = 0
+    for ao in audio_list:
+        print(str(i+1) + ':', play_list[i])
+        i += 1
+        player = ao.play()
+        player.wait_done()
+
+    import time
+    time.sleep(3)
+
 
 if __name__ == "__main__":
     construct_waltz()
